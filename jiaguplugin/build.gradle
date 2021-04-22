@@ -1,0 +1,35 @@
+apply plugin: 'groovy'
+apply plugin: 'com.novoda.bintray-release' // 新增
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.tools.build:gradle:4.0.1'
+    implementation gradleApi()
+
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+publish { // 新增
+    userOrg = 'wangxiang' // 注册bintray时的username
+    groupId = 'com.hippius' // 项目包名
+    artifactId = 'jiagu' // 项目名
+    publishVersion = '1.0.0' // 发布版本号
+    desc = 'apk jiagu plugin' // 项目描述，可选项
+    website = 'https://github.com/xiangwangrush/jiaguplugin' // 项目站点，可选项
+}
+
+apply plugin: 'maven-publish'
+
+publishing{ //会帮忙我们把插件代码上传到本地仓库 路径: 用户目录\.m2\repository
+    publications{
+        Jiagu(MavenPublication){
+            from components.java //把插件源码生产的jar上传
+            groupId 'com.hippius.jiagu'
+            artifactId 'gradle'
+            version '1.0.1'    //groupId artifactId version 三者决定了gradle 的依赖路径 需要被添加到 gradle的依赖中 通过classpath 引入
+        }
+    }
+}
+
